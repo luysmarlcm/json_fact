@@ -1,0 +1,202 @@
+{
+    "DocumentoElectronico": {
+        "Encabezado": {
+            "IdentificacionDocumento": {
+                "TipoDocumento": "01",
+                "NumeroDocumento": "5094",
+                "TipoProveedor": null,
+                "TipoTransaccion": null,
+                "NumeroPlanillaImportacion": null,
+                "NumeroExpedienteImportacion": null,
+                "SerieFacturaAfectada": null,
+                "NumeroFacturaAfectada": null,
+                "FechaFacturaAfectada": null,
+                "MontoFacturaAfectada": null,
+                "ComentarioFacturaAfectada": null,
+                "RegimenEspTributacion": null,
+                "FechaEmision": "19/08/2025",
+                "FechaVencimiento": "19/08/2025",
+                "HoraEmision": "12:00:00 am",
+                "Anulado": false,
+                "TipoDePago": "Inmediato",
+                "Serie": "",
+                "Sucursal": "002",
+                "TipoDeVenta": "Interna",
+                "Moneda": "BSD",
+                "TransaccionId": "FA5094",
+                "UrlPdf": null
+            },
+            "Vendedor": null,
+            "Comprador": {
+                "TipoIdentificacion": "V",
+                "NumeroIdentificacion": "18920866",
+                "RazonSocial": "YELY JIMENEZ",
+                "Direccion": "VILLA PRODUCTIVA CALLE 8 CONDOMINIO 9 CASA COLOR SALMON AL FINAL DEL CERRO BARQUISIMETO EDO. LARA",
+                "Ubigeo": null,
+                "Pais": "VE",
+                "Notificar": null,
+                "Telefono": [
+                    "4161273058"
+                ],
+                "Correo": [
+                    "ipsendprado8@gmail.com"
+                ],
+                "OtrosEnvios": null
+            },
+            "SujetoRetenido": null,
+            "Tercero": null,
+            "Totales": {
+                "NroItems": "1",
+                "MontoGravadoTotal": "3969.9",
+                "MontoExentoTotal": "0.00",
+                "MontoPercibidoTotal": "0.00",
+                "SubtotalAntesDescuento": "3422.33",
+                "TotalDescuento": null,
+                "TotalRecargos": null,
+                "Subtotal": "3422.33",
+                "TotalIVA": "547.57",
+                "MontoTotalConIVA": "3969.9",
+                "TotalAPagar": "3969.9",
+                "MontoEnLetras": "tres mil novecientos sesenta y nueve punto nueve",
+                "ListaRecargo": null,
+                "ListaDescBonificacion": null,
+                "ImpuestosSubtotal": [
+                    {
+                        "CodigoTotalImp": "G",
+                        "AlicuotaImp": "16.00",
+                        "BaseImponibleImp": "3422.33",
+                        "ValorTotalImp": "547.57"
+                    }
+                ],
+                "FormasPago": [
+                    {
+                        "Descripcion": "Efectivo BRMO",
+                        "Fecha": "09/08/2025",
+                        "Forma": "01",
+                        "Monto": "3969.9",
+                        "Moneda": "BSD",
+                        "TipoCambio": "0.00"
+                    }
+                ],
+                "TotalIGTF": null,
+                "TotalIGTF_VES": null
+            },
+            "TotalesRetencion": null,
+            "TotalesOtraMoneda": {
+                "Moneda": "USD",
+                "TipoCambio": "136.8931",
+                "MontoGravadoTotal": "25.0",
+                "MontoPercibidoTotal": "0.00",
+                "MontoExentoTotal": "0.00",
+                "Subtotal": "25.0",
+                "TotalAPagar": "29.0",
+                "TotalIVA": "4.0",
+                "MontoTotalConIVA": "29.0",
+                "MontoEnLetras": "veintinueve",
+                "SubtotalAntesDescuento": "25.0",
+                "TotalDescuento": null,
+                "TotalRecargos": null,
+                "ListaRecargo": null,
+                "ListaDescBonificacion": null,
+                "ImpuestosSubtotal": [
+                    {
+                        "CodigoTotalImp": "G",
+                        "AlicuotaImp": "16.00",
+                        "BaseImponibleImp": "25.0",
+                        "ValorTotalImp": "4.0"
+                    }
+                ]
+            },
+            "Orden": null
+        },
+        "DetallesItems": [
+            {
+                "NumeroLinea": "1",
+                "CodigoCIIU": null,
+                "CodigoPLU": "005",
+                "IndicadorBienoServicio": "2",
+                "Descripcion": "PLAN OPTIMO 300 MBPS",
+                "Cantidad": "1",
+                "UnidadMedida": "4L",
+                "PrecioUnitario": "3422.33",
+                "PrecioUnitarioDescuento": null,
+                "MontoBonificacion": null,
+                "DescripcionBonificacion": null,
+                "DescuentoMonto": "0.00",
+                "RecargoMonto": "0",
+                "PrecioItem": "3422.33",
+                "PrecioAntesDescuento": "3422.33",
+                "CodigoImpuesto": "G",
+                "TasaIVA": "16",
+                "ValorIVA": "547.57",
+                "ValorTotalItem": "3422.33",
+                "InfoAdicionalItem": [],
+                "ListaItemOTI": null
+            }
+        ],
+        "DetallesRetencion": null,
+        "Viajes": null,
+        "InfoAdicional": [
+            {
+                "Campo": "Contrato",
+                "Valor": "2645"
+            },
+            {
+                "Campo": "Mes1",
+                "Valor": "JUL"
+            },
+            {
+                "Campo": "Mes2",
+                "Valor": "AGO"
+            },
+            {
+                "Campo": "Mes3",
+                "Valor": "SEP"
+            },
+            {
+                "Campo": "Mes4",
+                "Valor": "OCT"
+            },
+            {
+                "Campo": "Mes5",
+                "Valor": "NOV"
+            },
+            {
+                "Campo": "Mes6",
+                "Valor": "DIC"
+            },
+            {
+                "Campo": "Cmes1",
+                "Valor": "2453"
+            },
+            {
+                "Campo": "Cmes2",
+                "Valor": "1200"
+            },
+            {
+                "Campo": "Cmes3",
+                "Valor": "0"
+            },
+            {
+                "Campo": "Cmes4",
+                "Valor": "0"
+            },
+            {
+                "Campo": "Cmes5",
+                "Valor": "0"
+            },
+            {
+                "Campo": "Cmes6",
+                "Valor": "0"
+            },
+            {
+                "Campo": "Promedio",
+                "Valor": "1867"
+            }
+        ],
+        "GuiaDespacho": null,
+        "Transporte": null,
+        "EsLote": true,
+        "EsMinimo": null
+    }
+}
