@@ -5,25 +5,26 @@ from num2words import num2words
 from dateutil import parser
 
 # 🔹 Leer el archivo Excel
-df = pd.read_excel("FACTURAR.xlsx")
+df = pd.read_excel("FACTURAR 03-09-2025 JSON.xlsx")
 
 # 🔹 Reemplazar NaN por vacío para algunos campos opcionales
 df = df.fillna("")
 
 # 🔹 Función auxiliar para fechas
-def fmt_fecha(valor, formato="%d/%m/%Y", incluir_hora=False):
-    if pd.isna(valor):
+def fmt_fecha(valor, formato="%d/%m/%Y"):
+    if pd.isna(valor) or valor == "":
         return None
     if isinstance(valor, str):
         try:
-            dt = parser.parse(valor)
-        except Exception:
+            fecha = pd.to_datetime(valor, dayfirst=True, errors="coerce")
+            if pd.isna(fecha):
+                return valor
+            return fecha.strftime(formato)  # 👈 solo fecha, sin hora
+        except:
             return valor
-    else:
-        dt = valor
-    if incluir_hora:
-        return dt.strftime("%I:%M:%S %p").lower()  # Ejemplo: 01:19:00 pm
-    return dt.strftime(formato)
+    if isinstance(valor, (datetime, pd.Timestamp)):
+        return valor.strftime(formato)  # 👈 solo fecha
+    return str(valor)
 
 # 🔹 Función para convertir montos a letras en español
 # def monto_a_letras(monto):
@@ -52,35 +53,32 @@ def fmt_fecha(valor, formato="%d/%m/%Y", incluir_hora=False):
 #         return None
 
 
+
 def monto_a_letras_b(monto):
     """
     Convierte un monto numérico a su representación en letras,
     con la palabra 'punto' para los decimales, sin añadir la moneda.
-
-    Ejemplo:
-    monto_a_letras(3969.9) -> "tres mil novecientos sesenta y nueve punto nueve"
     """
     try:
         monto_str = str(monto)
-        # Verifica si el número tiene una parte decimal
         if '.' in monto_str:
-            # Divide el número en partes entera y decimal
             partes = monto_str.split('.')
             entero = int(partes[0])
-            decimal = int(partes[1])
+            decimal_str = partes[1]
 
-            # Convierte ambas partes a letras
+            # Convierte la parte entera a letras
             entero_letras = num2words(entero, lang='es')
-            decimal_letras = num2words(decimal, lang='es')
+            
+            # Convierte cada dígito decimal a letras y únelos
+            decimal_letras_list = [num2words(int(digito), lang='es') for digito in decimal_str]
+            decimal_letras = " ".join(decimal_letras_list)
 
             # Combina las partes con "punto"
             return f"{entero_letras} punto {decimal_letras}"
         else:
-            # Si no hay decimales, solo convierte la parte entera
             return num2words(int(monto), lang='es')
             
     except (ValueError, IndexError):
-        # Maneja errores en el formato de entrada
         return None
 
 
@@ -128,8 +126,8 @@ def monto_a_letras(monto, moneda="dolares"):
 def transformar_fila(row):
     fecha_emision = fmt_fecha(row["Fecha Emision"])  # Solo fecha
     fecha_vencimiento = fmt_fecha(row["Fecha Vencimiento"])
-    hora_emision = fmt_fecha(row["Fecha Emision"], incluir_hora=True) if row["Fecha Emision"] else None
-    fecha_pago = fmt_fecha(row["Fecha Pago"])
+   # hora_emision = fmt_fecha(row["Fecha Emision"], incluir_hora=True) if row["Fecha Emision"] else None
+    fecha_pago = fmt_fecha(row["Fecha Pago"], "%d/%m/%Y")
 
     # 🔹 Redondear montos a 2 decimales
     monto_bs = round(float(row["bolivares"]), 2)
@@ -158,7 +156,7 @@ def transformar_fila(row):
                     "RegimenEspTributacion": None,
                     "FechaEmision": fecha_emision,
                     "FechaVencimiento": fecha_vencimiento,
-                    "HoraEmision": hora_emision,
+                    "HoraEmision": "10:00:00 am",  # hora_emision,
                     "Anulado": False,
                     "TipoDePago": "Inmediato",
                     "Serie": "",
@@ -283,7 +281,7 @@ def transformar_fila(row):
                 {"Campo": "Mes5", "Valor": "NOV"},
                 {"Campo": "Mes6", "Valor": "DIC"},
                 {"Campo": "Cmes1", "Valor": str(row["navegacion"])},
-                {"Campo": "Cmes2", "Valor":  str(row["navegacion2"])},
+                {"Campo": "Cmes2", "Valor": str(row["navegacion2"])},
                 {"Campo": "Cmes3", "Valor": "0"},
                 {"Campo": "Cmes4", "Valor": "0"},
                 {"Campo": "Cmes5", "Valor": "0"},
