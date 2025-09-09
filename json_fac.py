@@ -5,7 +5,7 @@ from num2words import num2words
 from dateutil import parser
 
 # 🔹 Leer el archivo Excel
-df = pd.read_excel("FACTURAR 03-09-2025 JSON.xlsx")
+df = pd.read_excel("FAC-0509 3.xlsx")
 
 # 🔹 Reemplazar NaN por vacío para algunos campos opcionales
 df = df.fillna("")
@@ -25,34 +25,6 @@ def fmt_fecha(valor, formato="%d/%m/%Y"):
     if isinstance(valor, (datetime, pd.Timestamp)):
         return valor.strftime(formato)  # 👈 solo fecha
     return str(valor)
-
-# 🔹 Función para convertir montos a letras en español
-# def monto_a_letras(monto):
-#     """
-#     Convierte un monto numérico a su representación en letras,
-#     manejando enteros y decimales.
-    
-#     Ejemplo:
-#     monto_a_letras(3969.9) -> "tres mil novecientos sesenta y nueve punto nueve"
-#     """
-#     try:
-#         monto_str = str(monto)
-#         if '.' in monto_str:
-#             partes = monto_str.split('.')
-#             entero = int(partes[0])
-#             decimal = int(partes[1])
-            
-#             entero_letras = num2words(entero, lang='es')
-#             decimal_letras = num2words(decimal, lang='es')
-            
-#             return f"{entero_letras} punto {decimal_letras}"
-#         else:
-#             return num2words(int(monto), lang='es')
-#     except Exception as e:
-#         print(f"Error: {e}")
-#         return None
-
-
 
 def monto_a_letras_b(monto):
     """
@@ -168,14 +140,14 @@ def transformar_fila(row):
                 },
                 "Vendedor": None,
                 "Comprador": {
-                    "TipoIdentificacion": "V",
+                    "TipoIdentificacion":str(row["Documento"]),
                     "NumeroIdentificacion": str(row["DNI/C.I./C.C./IFE"]),
                     "RazonSocial": row["Cliente"],
                     "Direccion": row["Dirección"],
                     "Ubigeo": None,
                     "Pais": "VE",
                     "Notificar": None,
-                    "Telefono": [str(row["Telefono"])],
+                    "Telefono":[str(row["Telefono"])],
                     "Correo": [row["Correo"]],
                     "OtrosEnvios": None
                 },
