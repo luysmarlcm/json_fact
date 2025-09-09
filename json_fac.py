@@ -1,114 +1,80 @@
 import pandas as pd
 import json
+import os
+import random
 from datetime import datetime
 from num2words import num2words
-from dateutil import parser
 
 # 🔹 Leer el archivo Excel
-df = pd.read_excel("FAC-0509 3.xlsx")
-
-# 🔹 Reemplazar NaN por vacío para algunos campos opcionales
+df = pd.read_excel("FAC-0909.xlsx")
 df = df.fillna("")
 
 # 🔹 Función auxiliar para fechas
 def fmt_fecha(valor, formato="%d/%m/%Y"):
     if pd.isna(valor) or valor == "":
         return None
-    if isinstance(valor, str):
-        try:
-            fecha = pd.to_datetime(valor, dayfirst=True, errors="coerce")
-            if pd.isna(fecha):
-                return valor
-            return fecha.strftime(formato)  # 👈 solo fecha, sin hora
-        except:
+    try:
+        fecha = pd.to_datetime(valor, dayfirst=True, errors="coerce")
+        if pd.isna(fecha):
             return valor
-    if isinstance(valor, (datetime, pd.Timestamp)):
-        return valor.strftime(formato)  # 👈 solo fecha
-    return str(valor)
+        return fecha.strftime(formato)
+    except:
+        return valor
 
 def monto_a_letras_b(monto):
-    """
-    Convierte un monto numérico a su representación en letras,
-    con la palabra 'punto' para los decimales, sin añadir la moneda.
-    """
     try:
         monto_str = str(monto)
         if '.' in monto_str:
             partes = monto_str.split('.')
             entero = int(partes[0])
             decimal_str = partes[1]
-
-            # Convierte la parte entera a letras
             entero_letras = num2words(entero, lang='es')
-            
-            # Convierte cada dígito decimal a letras y únelos
-            decimal_letras_list = [num2words(int(digito), lang='es') for digito in decimal_str]
-            decimal_letras = " ".join(decimal_letras_list)
-
-            # Combina las partes con "punto"
+            decimal_letras = " ".join(num2words(int(d), lang='es') for d in decimal_str)
             return f"{entero_letras} punto {decimal_letras}"
         else:
             return num2words(int(monto), lang='es')
-            
-    except (ValueError, IndexError):
+    except:
         return None
 
-
 def monto_a_letras(monto, moneda="dolares"):
-    """
-    Convierte un monto numérico a su representación en letras,
-    usando "centavos" o "céntimos" para los decimales.
-
-    Parámetros:
-    monto (float): El valor numérico a convertir.
-    moneda (str): 'dolares' o 'bolivares'. Por defecto es 'dolares'.
-
-    Retorna:
-    str: El monto en letras.
-    """
     try:
         monto = float(monto)
         entero = int(monto)
         decimales = int(round((monto - entero) * 100))
-        
         entero_letras = num2words(entero, lang='es')
 
         if moneda.lower() == "bolivares":
             if decimales > 0:
-                decimales_letras = num2words(decimales, lang='es')
-                return f"{entero_letras} con {decimales_letras} céntimos"
+                return f"{entero_letras} con {num2words(decimales, lang='es')} céntimos"
             else:
                 return f"{entero_letras} bolívares"
-        
         elif moneda.lower() == "dolares":
             if decimales > 0:
-                decimales_letras = num2words(decimales, lang='es')
-                return f"{entero_letras} con {decimales_letras} centavos"
+                return f"{entero_letras} con {num2words(decimales, lang='es')} centavos"
             else:
-                return f"{entero_letras}" # No se añade la palabra "dólares"
-        
+                return f"{entero_letras}"
         else:
             return "Moneda no reconocida."
-
-    except (ValueError, TypeError):
+    except:
         return None
 
-
-# 🔹 Función para transformar una fila en JSON con redondeo a 2 decimales y None visibles
+# 🔹 Transformar cada fila
 def transformar_fila(row):
-    fecha_emision = fmt_fecha(row["Fecha Emision"])  # Solo fecha
+    fecha_emision = fmt_fecha(row["Fecha Emision"])
     fecha_vencimiento = fmt_fecha(row["Fecha Vencimiento"])
-   # hora_emision = fmt_fecha(row["Fecha Emision"], incluir_hora=True) if row["Fecha Emision"] else None
     fecha_pago = fmt_fecha(row["Fecha Pago"], "%d/%m/%Y")
 
-    # 🔹 Redondear montos a 2 decimales
     monto_bs = round(float(row["bolivares"]), 2)
     monto_usd = round(float(row["Total"]), 0)
     bolivares_sin_iva = round(float(row["bolivares sin iva"]), 2)
     precio_sin_iva = round(float(row["precio sin iva"]), 2)
     iva_bs = round(monto_bs - bolivares_sin_iva, 2)
     iva_usd = round(monto_usd - precio_sin_iva, 2)
-    pro=m = round(float(row["promedio"]), 0)
+
+    # 🔹 Generar navegación aleatoria
+    navegacion1 = random.randint(1000, 6000)
+    navegacion2 = random.randint(1000, 6000)
+    promedio = round((navegacion1 + navegacion2) / 2, 0)
 
     return {
         "DocumentoElectronico": {
@@ -252,13 +218,13 @@ def transformar_fila(row):
                 {"Campo": "Mes4", "Valor": "OCT"},
                 {"Campo": "Mes5", "Valor": "NOV"},
                 {"Campo": "Mes6", "Valor": "DIC"},
-                {"Campo": "Cmes1", "Valor": str(row["navegacion"])},
-                {"Campo": "Cmes2", "Valor": str(row["navegacion2"])},
+                {"Campo": "Cmes1", "Valor": str(navegacion1)},
+                {"Campo": "Cmes2", "Valor": str(navegacion2)},
                 {"Campo": "Cmes3", "Valor": "0"},
                 {"Campo": "Cmes4", "Valor": "0"},
                 {"Campo": "Cmes5", "Valor": "0"},
                 {"Campo": "Cmes6", "Valor": "0"},
-                {"Campo": "Promedio", "Valor": str(int(row["promedio"]))},
+                {"Campo": "Promedio", "Valor": str(int(promedio))},
             ],
             "GuiaDespacho": None,
             "Transporte": None,
@@ -266,12 +232,26 @@ def transformar_fila(row):
             "EsMinimo": None
         }
     }
+# 📂 Crear carpeta principal con fecha actual
+hoy = datetime.now().strftime("%Y%m%d")
+base_folder = f"FAC-{hoy}"
+os.makedirs(base_folder, exist_ok=True)
 
 # 🔹 Generar un archivo JSON por fila
-for _, row in df.iterrows():
+for idx, row in df.iterrows():
     data = transformar_fila(row)
     correlativo = str(row["Correlativo"]).zfill(6)
-    filename = f"0{correlativo}.json"
+
+    # 📂 Calcular número de lote (001, 002, …)
+    lote_num = (idx // 100) + 1
+    lote_nombre = f"J408185431-{hoy}-{str(lote_num).zfill(3)}"
+    lote_folder = os.path.join(base_folder, lote_nombre)
+    os.makedirs(lote_folder, exist_ok=True)
+
+    # 📄 Nombre de archivo
+    filename = os.path.join(lote_folder, f"0{correlativo}.json")
+
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
+
     print(f"✅ Archivo generado: {filename}")
